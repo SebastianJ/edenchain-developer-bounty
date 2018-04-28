@@ -73,7 +73,7 @@ In this repo there's a fairly simplistic Binary Search Tree/BST implemented at l
 
 In terms of blockchains, BST/B-trees should probably only be used as a data storage format for data or transactions stored in each block since the structure doesn't keep track of the actual deterministic order between various data points, e.g. blocks.
 
-If the entire blockchain's blocks were stored this way there would be no way to determine the correct block order and subsequently the blockchain would be subject to [Byzantine faults]](https://en.wikipedia.org/wiki/Byzantine_fault_tolerance).
+If the entire blockchain's blocks were stored this way there would be no way to determine the correct block order and subsequently the blockchain would be subject to [Byzantine faults](https://en.wikipedia.org/wiki/Byzantine_fault_tolerance).
 
 If node A produces a new block the same time as node B produces a new block then node C won't be able to tell which of these new blocks should be considered as the new block since there's no chain or tree determining the correct and valid order of the previous blocks.
 
