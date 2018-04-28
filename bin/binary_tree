@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "edenchain/developer/bounty"
+
+require "benchmark"
+require "colorize"
+
+# Color profiles to make it easier to discern different types of output
+color_profiles = {
+  info: -> (string) { string.bold },
+  we:   -> (string) { string.colorize(color: :light_blue, background: :default).bold },
+  bob:  -> (string) { string.colorize(color: :green, background: :light_white).italic },
+}
+
+# The bounty question specifically mentions 1,000,000 phone numbers, so generate or retrieve 1,000,000 phone numbers
+size                    =   1_000_000
+phone_numbers           =   ::Edenchain::Developer::Bounty::Data::Seeder.phone_numbers(size: size)
+
+puts color_profiles[:info].call("We've successfully generated or retrieved #{phone_numbers.size} phone numbers!")
+
+puts color_profiles[:info].call("Creating a new Binary Tree to hold 1,000,000 SHA256 hashed phone numbers (this could take a few seconds)")
+
+genesis         =   Digest::SHA256.hexdigest(phone_numbers.first)
+tree            =   Edenchain::Developer::Bounty::BinaryTree::Node.new(genesis)
+
+phone_numbers.each do |phone_number|
+  tree         <<   Digest::SHA256.hexdigest(phone_number)
+end
+
+puts color_profiles[:info].call("Binary Tree successfully initialized!")
+
+puts color_profiles[:info].call("\nOur phone number still isn't in the Binary Tree, let's add it...")
+
+our_phone_number        =   "555-0001"
+our_phone_number_hash   =   Digest::SHA256.hexdigest(our_phone_number)
+
+tree            <<   our_phone_number_hash
+
+puts color_profiles[:info].call("Our phone number (#{our_phone_number}) has now been added to the Binary Tree using the SHA256 hash #{our_phone_number_hash}")
+
+puts color_profiles[:info].call("\nLet us now assume that Bob has the exact same copy of the tree as we have.")
+
+puts color_profiles[:info].call("\n" + "-" * 50)
+
+puts color_profiles[:we].call("\nWe: Bob, do you have our phone number securely stored?")
+
+puts color_profiles[:bob].call("\nBob: What's the hashed version of your phone number?")
+
+puts color_profiles[:we].call("\nWe: #{our_phone_number_hash}")
+
+answer = tree.include?(our_phone_number_hash).eql?(true) ? "Yes, I do have your phone number securely stored!" : "No, I do not have your phone number securely stored!"
+
+puts color_profiles[:bob].call("\nBob: Cool, I'm checking your hash \"#{our_phone_number_hash}\" against my tree. #{answer}")
+
+puts color_profiles[:we].call("\nWe: But Bob, is it fast to look for my phone number?")
+
+puts color_profiles[:bob].call("\nBob: Let me run a benchmark!")
+
+puts color_profiles[:info].call("\n" + "-" * 50)
+
+Benchmark.bm do |benchmark|
+  benchmark.report { tree.include?(our_phone_number_hash) }
+end
+
+puts color_profiles[:info].call("-" * 50)
+
+puts color_profiles[:bob].call("\nBob: Now when that's taken care of - Can you guys please call Sminem? I've already ordered my moon lambo on credit.")
+
+puts color_profiles[:we].call("\nWe: Da.")
+
+puts "\n"

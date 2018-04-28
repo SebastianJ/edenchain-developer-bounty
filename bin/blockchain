@@ -1,0 +1,104 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "edenchain/developer/bounty"
+
+require "benchmark"
+require "colorize"
+require "pp"
+
+# Color profiles to make it easier to discern different types of output
+color_profiles = {
+  info: -> (string) { string.bold },
+  we:   -> (string) { string.colorize(color: :light_blue, background: :default).bold },
+  bob:  -> (string) { string.colorize(color: :green, background: :light_white).italic },
+}
+
+options                 =   {
+  data_size:      1_000_000, # How many phone numbers that should be generated or retrieved. The bouny specifies 1,000,000 phone numbers so go for that.
+  
+  blockchain: {
+    pow_enabled:  true,  # Should Proof of Work be enabled when generating the Blockchain? If it is, it will take substantially longer time to generate the blockchain.
+    block_size:   1_000, # Very naive block size limitation, it isn't based on block size in bytes but just the number of data items a certain block can hold.
+    verbose:      true,  # If Proof of Work is enabled it's wise to enable verbose logging from the Blockchain to see output of Proof of Work progress etc.
+  },
+  
+  phone_number: {
+    unhashed:     "555-0001", # Simon says...
+  },
+  
+  presentation: {
+    lines: 100
+  }
+}
+
+options[:phone_number][:hashed] = Digest::SHA256.hexdigest(options[:phone_number][:unhashed])
+
+phone_numbers           =   ::Edenchain::Developer::Bounty::Data::Seeder.phone_numbers(size: options[:data_size])
+hashed_data             =   phone_numbers.collect { |phone_number| Digest::SHA256.hexdigest(phone_number) }
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines] + "\n")
+
+puts color_profiles[:info].call("We've successfully generated or retrieved #{phone_numbers.size} phone numbers!")
+
+puts color_profiles[:info].call("\nCreating a new Blockchain to hold 1,000,000 SHA256 hashed phone numbers. Block size: #{options[:blockchain][:block_size]}")
+
+pow_message             =   options[:blockchain][:pow_enabled] ? "Proof of Work is enabled - it will take substantially more time to generate the blockchain, please be patient." : "Proof of Work isn't enabled - generation of the blockchain should just take a few seconds."
+
+puts color_profiles[:info].call(pow_message)
+
+chain                   =   Edenchain::Developer::Bounty::Blockchain::Chain.new(
+                              enable_pow:   options[:blockchain][:pow_enabled],
+                              block_size:   options[:blockchain][:block_size],
+                              data:         hashed_data,
+                              verbose:      options[:blockchain][:verbose]
+                            )
+
+puts color_profiles[:info].call("Blockchain successfully generated!")
+
+puts color_profiles[:info].call("\nOur phone number, #{options[:phone_number][:unhashed]}, still isn't stored in the Blockchain, let's add it!")
+
+chain.current_block.data << options[:phone_number][:hashed]
+
+address                 =   chain.current_block.item_address(options[:phone_number][:hashed])
+
+puts color_profiles[:info].call("Our phone number (#{options[:phone_number][:unhashed]}) has now been added to the Blockchain using the SHA256 hash #{options[:phone_number][:hashed]}.")
+puts color_profiles[:info].call("It can be found in the block with block height ##{chain.current_block.index} and can be retrieved using the address #{address}")
+
+puts color_profiles[:info].call("\nLet us now assume that Bob has the exact same copy of the Blockchain as we have.")
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+puts color_profiles[:we].call("\nWe: Bob, do you have our phone number securely stored?")
+
+puts color_profiles[:bob].call("\nBob: Do you have the lookup address for your phone number?")
+
+puts color_profiles[:we].call("\nWe: Yeah, it's \"#{address}\"")
+
+lookup                  =   chain.lookup(address)
+answer                  =   lookup[:included].eql?(true) ? "Yes, I do have your phone number securely stored! It's stored in the blockchain at block height #{lookup[:block_height]}." : "No, I do not have your phone number securely stored!"
+
+puts color_profiles[:bob].call("\nBob: Cool, I'm checking your address \"#{address}\" against my version of the blockchain.")
+puts color_profiles[:bob].call("\nBob: #{answer}")
+
+puts color_profiles[:we].call("\nWe: But Bob, is it fast to look for our phone number in the blockchain?")
+
+puts color_profiles[:bob].call("\nBob: Let me run a benchmark!")
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+Benchmark.bm do |benchmark|
+  benchmark.report { chain.include?(address) }
+end
+
+puts color_profiles[:info].call("-" * options[:presentation][:lines])
+
+puts color_profiles[:bob].call("\nBob: Now when that's sorted out - Do you want to know Igor Bogdanoff's personal phone number?")
+
+puts color_profiles[:we].call("\nWe: Yes, please.")
+
+puts color_profiles[:bob].call("\nBob: It's 1-600-DAAAMP-IT")
+
+puts color_profiles[:we].call("\nWe: Aye, sweet.")
+
+puts "\n"
