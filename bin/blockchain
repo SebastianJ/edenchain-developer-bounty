@@ -10,7 +10,8 @@ require "pp"
 # Color profiles to make it easier to discern different types of output
 color_profiles = {
   info: -> (string) { string.bold },
-  we:   -> (string) { string.colorize(color: :light_blue, background: :default).bold },
+  me:   -> (string) { string.colorize(color: :light_blue, background: :default).bold },
+  eve:  -> (string) { string.colorize(color: :light_magenta, background: :default).bold },
   bob:  -> (string) { string.colorize(color: :green, background: :light_white).italic },
 }
 
@@ -18,7 +19,7 @@ options                 =   {
   data_size:      1_000_000, # How many phone numbers that should be generated or retrieved. The bouny specifies 1,000,000 phone numbers so go for that.
   
   blockchain: {
-    pow_enabled:  true,  # Should Proof of Work be enabled when generating the Blockchain? If it is, it will take substantially longer time to generate the blockchain.
+    pow_enabled:  false,  # Should Proof of Work be enabled when generating the Blockchain? If it is, it will take substantially longer time to generate the blockchain.
     block_size:   1_000, # Very naive block size limitation, it isn't based on block size in bytes but just the number of data items a certain block can hold.
     verbose:      true,  # If Proof of Work is enabled it's wise to enable verbose logging from the Blockchain to see output of Proof of Work progress etc.
   },
@@ -69,23 +70,42 @@ puts color_profiles[:info].call("\nLet us now assume that Bob has the exact same
 
 puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
 
-puts color_profiles[:we].call("\nWe: Bob, do you have our phone number securely stored?")
+puts color_profiles[:me].call("\nMe: Hey Eve, nice to see you again! Can you please give Bob a note from me when you see him?")
 
-puts color_profiles[:bob].call("\nBob: Do you have the lookup address for your phone number?")
+puts color_profiles[:eve].call("\nEve: Hey Sebastian, nice to see you too. Sure, no problem. What does the note say?")
 
-puts color_profiles[:we].call("\nWe: Yeah, it's \"#{address}\"")
+puts color_profiles[:me].call("\nMe: It just says: \"Do you have my phone number? #{address}\"")
 
-lookup                  =   chain.lookup(address)
-answer                  =   lookup[:included].eql?(true) ? "Yes, I do have your phone number securely stored! It's stored in the blockchain at block height #{lookup[:block_height]}." : "No, I do not have your phone number securely stored!"
+puts color_profiles[:eve].call("\nEve: \"#{address}\" sure looks like a weird phone number.")
 
-puts color_profiles[:bob].call("\nBob: Cool, I'm checking your address \"#{address}\" against my version of the blockchain.")
-puts color_profiles[:bob].call("\nBob: #{answer}")
+puts color_profiles[:me].call("\nMe: Yeah, it's just an old Klingon joke or something, Bob'll get it.")
 
-puts color_profiles[:we].call("\nWe: But Bob, is it fast to look for our phone number in the blockchain?")
-
-puts color_profiles[:bob].call("\nBob: Let me run a benchmark!")
+puts color_profiles[:eve].call("\nEve: Oh ok... *nerds*.")
 
 puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+puts color_profiles[:eve].call("\nEve: Hey Bob, nice to catch up again. I have a note to give to you.")
+
+puts color_profiles[:bob].call("\nBob: Ah cool, thanks. Just let me check something quick. *Bob inputs \"#{address}\" in a neat little app on his iPhone*")
+
+included                =   chain.include?(address)
+answer                  =   included ? "Yes" : "No"
+
+puts color_profiles[:bob].call("\nBob: Eve, can you please write \"#{answer}\" on the back of the note and give it back to Sebastian the next time you see him?")
+
+puts color_profiles[:eve].call("\nEve: Sure thing!")
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+puts color_profiles[:eve].call("\nEve: Hey! Here's the note from Bob, he wrote something on the back.")
+
+reply                   =   included ? "All right, seems like everything is in order, thanks for helping me." : "Hm, this can't be right, I have to check with Bob. But thanks for giving me the note!"
+
+puts color_profiles[:me].call("\nMe: #{reply}")
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+puts color_profiles[:bob].call("\nBob: *emailing* I'm guessing you'd be interested in the benchmarks as well:")
 
 Benchmark.bm do |benchmark|
   benchmark.report { chain.include?(address) }
@@ -93,12 +113,6 @@ end
 
 puts color_profiles[:info].call("-" * options[:presentation][:lines])
 
-puts color_profiles[:bob].call("\nBob: Now when that's sorted out - Do you want to know Igor Bogdanoff's personal phone number?")
-
-puts color_profiles[:we].call("\nWe: Yes, please.")
-
-puts color_profiles[:bob].call("\nBob: It's 1-600-DAAAMP-IT")
-
-puts color_profiles[:we].call("\nWe: Aye, sweet.")
+puts color_profiles[:bob].call("\nBob: P.S. I've got Igor Bogdanoff's personal phone number. It's 1-600-DAAAMP-IT")
 
 puts "\n"

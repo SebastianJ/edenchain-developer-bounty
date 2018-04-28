@@ -22,18 +22,22 @@ Please see the section "Implementations" for further discussion of this question
 
 ## Question 2: "How can you check that your friend, Bob, has your phone number stored correctly while keeping your message safe from prying eyes?"
 
-This question is a bit unclear to be honest.
+This question is a bit unclear to be honest. It's also stated in two different ways:
 
-I'm interpreting this question the following way and making these assumptions:
+* In the [developer bounty program blog post](https://edenchainio.wordpress.com/2018/04/14/edenchains-bounty-campaign-for-developers/) it's stated as: "How can you check that your friend, Bob, has your phone number stored correctly while keeping your message safe from prying eyes?"
+* In the actual submission form the question is stated as: "You need to check that your friend, Bob, has your correct phone number, but you cannot ask him directly. You must write the question on a card which and give it to Eve who will take the card to Bob and return the answer to you. What must you write on the card, besides the question, to ensure Bob can encode the message so that Eve cannot read your phone number?"
 
-1. Bob has the same copy of the data source as we have
-2. Both data sources contain encrypted hashes of phone numbers
-3. The hashing function for both data sources are the same and future data in both sources will be generated using the exact same hashing function
-4. We can check if Bob has our phone number by sending him the hashed version of our phone number
-5. Bob will use our hash and compare it to the stored phone numbers in the data source
-6. If there's a matching hash in the data source then Bob has our phone number securely and cryptographically stored.
+Given that the latter question is posted in the actual submission form, I'm assuming that's the correct question to answer.
 
-TL;DR: We give Bob our encrypted/hashed phone number and Bob checks his data source if the hash exists there. If it does, he's got our phone number securely stored and we didn't have to send the phone number in clear text for prying eyes to see.
+I'm making the following assumptions:
+
+1. Bob has the same copy of the data source that we have
+2. Both data sources contain encrypted hashes of phone numbers, all of the numbers encrypted using the same hashing function everywhere
+3. We can check if Bob has our phone number by giving Eve a note that says "Do you have my phone number?" followed by a hashed version of our phone number
+4. Bob will use our hash and compare it to the stored phone numbers in his data source
+5. If there's a matching hash in the data source then Bob has our phone number securely and cryptographically stored. He'll simply just write "Yes" on a note and give to Eve to give to us the next time we see her.
+
+TL;DR: We give Eve a note with the question "Do you have my phone number?" followed by our encrypted/hashed phone number. When Bob receives the note he checks his data source if the hash exists there. If it does, he's got our phone number securely stored, and he'll give a note saying "Yes" to Eve which she'll subsequently give to us.
 
 Please see the section "Implementations" for further discussion of this question.
 

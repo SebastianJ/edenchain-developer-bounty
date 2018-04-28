@@ -9,13 +9,26 @@ require "colorize"
 # Color profiles to make it easier to discern different types of output
 color_profiles = {
   info: -> (string) { string.bold },
-  we:   -> (string) { string.colorize(color: :light_blue, background: :default).bold },
+  me:   -> (string) { string.colorize(color: :light_blue, background: :default).bold },
+  eve:  -> (string) { string.colorize(color: :light_magenta, background: :default).bold },
   bob:  -> (string) { string.colorize(color: :green, background: :light_white).italic },
 }
 
-# The bounty question specifically mentions 1,000,000 phone numbers, so generate or retrieve 1,000,000 phone numbers
-size                    =   1_000_000
-phone_numbers           =   ::Edenchain::Developer::Bounty::Data::Seeder.phone_numbers(size: size)
+options                 =   {
+  data_size:      1_000_000, # How many phone numbers that should be generated or retrieved. The bouny specifies 1,000,000 phone numbers so go for that.
+  
+  phone_number: {
+    unhashed:     "555-0001", # Simon says...
+  },
+  
+  presentation: {
+    lines: 100
+  }
+}
+
+options[:phone_number][:hashed] = Digest::SHA256.hexdigest(options[:phone_number][:unhashed])
+
+phone_numbers           =   ::Edenchain::Developer::Bounty::Data::Seeder.phone_numbers(size: options[:data_size])
 
 puts color_profiles[:info].call("We've successfully generated or retrieved #{phone_numbers.size} phone numbers!")
 
@@ -32,41 +45,57 @@ puts color_profiles[:info].call("Binary Tree successfully initialized!")
 
 puts color_profiles[:info].call("\nOur phone number still isn't in the Binary Tree, let's add it...")
 
-our_phone_number        =   "555-0001"
-our_phone_number_hash   =   Digest::SHA256.hexdigest(our_phone_number)
+tree           <<   options[:phone_number][:hashed]
 
-tree            <<   our_phone_number_hash
-
-puts color_profiles[:info].call("Our phone number (#{our_phone_number}) has now been added to the Binary Tree using the SHA256 hash #{our_phone_number_hash}")
+puts color_profiles[:info].call("Our phone number (#{options[:phone_number][:unhashed]}) has now been added to the Binary Tree using the SHA256 hash #{options[:phone_number][:hashed]}")
 
 puts color_profiles[:info].call("\nLet us now assume that Bob has the exact same copy of the tree as we have.")
 
-puts color_profiles[:info].call("\n" + "-" * 50)
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
 
-puts color_profiles[:we].call("\nWe: Bob, do you have our phone number securely stored?")
+puts color_profiles[:me].call("\nMe: Hey Eve, nice to see you again! Can you please give Bob a note from me when you see him?")
 
-puts color_profiles[:bob].call("\nBob: What's the hashed version of your phone number?")
+puts color_profiles[:eve].call("\nEve: Hey Sebastian, nice to see you too. Sure, no problem. What does the note say?")
 
-puts color_profiles[:we].call("\nWe: #{our_phone_number_hash}")
+puts color_profiles[:me].call("\nMe: It just says: \"Do you have my phone number? #{options[:phone_number][:hashed]}\"")
 
-answer = tree.include?(our_phone_number_hash).eql?(true) ? "Yes, I do have your phone number securely stored!" : "No, I do not have your phone number securely stored!"
+puts color_profiles[:eve].call("\nEve: \"#{options[:phone_number][:hashed]}\" sure looks like a weird phone number.")
 
-puts color_profiles[:bob].call("\nBob: Cool, I'm checking your hash \"#{our_phone_number_hash}\" against my tree. #{answer}")
+puts color_profiles[:me].call("\nMe: Yeah, it's just an old Klingon joke or something, Bob'll get it.")
 
-puts color_profiles[:we].call("\nWe: But Bob, is it fast to look for my phone number?")
+puts color_profiles[:eve].call("\nEve: Oh ok... *nerds*.")
 
-puts color_profiles[:bob].call("\nBob: Let me run a benchmark!")
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
 
-puts color_profiles[:info].call("\n" + "-" * 50)
+puts color_profiles[:eve].call("\nEve: Hey Bob, nice to catch up again. I have a note to give to you.")
+
+puts color_profiles[:bob].call("\nBob: Ah cool, thanks. Just let me check something quick. *Bob inputs \"#{options[:phone_number][:hashed]}\" in a neat little app on his iPhone*")
+
+included                =   tree.include?(options[:phone_number][:hashed])
+answer                  =   included ? "Yes" : "No"
+
+puts color_profiles[:bob].call("\nBob: Eve, can you please write \"#{answer}\" on the back of the note and give it back to Sebastian the next time you see him?")
+
+puts color_profiles[:eve].call("\nEve: Sure thing!")
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+puts color_profiles[:eve].call("\nEve: Hey! Here's the note from Bob, he wrote something on the back.")
+
+reply                   =   included ? "All right, seems like everything is in order, thanks for helping me." : "Hm, this can't be right, I have to check with Bob. But thanks for giving me the note!"
+
+puts color_profiles[:me].call("\nMe: #{reply}")
+
+puts color_profiles[:info].call("\n" + "-" * options[:presentation][:lines])
+
+puts color_profiles[:bob].call("\nBob: *emailing* I'm guessing you'd be interested in the benchmarks as well:")
 
 Benchmark.bm do |benchmark|
-  benchmark.report { tree.include?(our_phone_number_hash) }
+  benchmark.report { tree.include?(options[:phone_number][:hashed]) }
 end
 
-puts color_profiles[:info].call("-" * 50)
+puts color_profiles[:info].call("-" * options[:presentation][:lines])
 
-puts color_profiles[:bob].call("\nBob: Now when that's taken care of - Can you guys please call Sminem? I've already ordered my moon lambo on credit.")
-
-puts color_profiles[:we].call("\nWe: Da.")
+puts color_profiles[:bob].call("\nBob: P.S. Can you do me a favor and please call Sminem? I've already ordered my moon lambo on credit.")
 
 puts "\n"
