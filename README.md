@@ -105,6 +105,9 @@ If node A produces a new block at roughly the same time as node B produces a new
 Combining all of the above leads us to...
 
 ### A super simple blockchain implementation
+
+![Quick rundown of the simple blockchain implementation](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/files/screencast.gif)
+
 In this repo there's a super simple blockchain implementation that combines the concepts of Binary Search Trees, Hashing and Merkle Trees to store 1,000,000 hashed phone numbers (well, it can be anything actually, but just to stick to the bounty questions) and easily retrieve them, while simultaneously mitigating Byzantine faults and creating a verifiable blockchain.
 
 The simple blockchain implementation features:
@@ -119,6 +122,8 @@ The simple blockchain implementation features:
 The main code base for this blockchain is stored in lib/edenchain/developer/bounty/blockchain/chain.rb and lib/edenchain/developer/bounty/blockchain/block.rb and is easily demoed by running bin/blockchain.
 
 Just be aware that running bin/blockchain with the Proof of Work algorithm enabled will lead to slower execution compared to running without PoW enabled.
+
+![Bogdanoff hands out 140,000 EDN tokens to me (obviously)](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/files/bogdanoff-edn.jpg)
 
 ## Setup
 
