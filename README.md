@@ -31,10 +31,10 @@ Given that the latter question is posted in the actual submission form, I'm assu
 
 I'm making the following assumptions:
 
-1. Bob has the same copy of the data source that we have
-2. Both data sources contain encrypted hashes of phone numbers, all of the numbers encrypted using the same hashing function everywhere
-3. We can check if Bob has our phone number by giving Eve a note that says "Do you have my phone number?" followed by a hashed version of our phone number
-4. Bob will use our hash and compare it to the stored phone numbers in his data source
+1. Bob has the same copy of the data source that we have.
+2. Both data sources contain encrypted hashes of phone numbers, all of the numbers encrypted using the same hashing function everywhere.
+3. We can check if Bob has our phone number by giving Eve a note that says "Do you have my phone number?" followed by a hashed version of our phone number.
+4. Bob will use our hash and compare it to the stored phone numbers in his data source.
 5. If there's a matching hash in the data source then Bob has our phone number securely and cryptographically stored. He'll simply just write "Yes" on a note and give to Eve to give to us the next time we see her.
 
 TL;DR: We give Eve a note with the question "Do you have my phone number?" followed by our encrypted/hashed phone number. When Bob receives the note he checks his data source if the hash exists there. If it does, he's got our phone number securely stored, and he'll give a note saying "Yes" to Eve which she'll subsequently give to us.
@@ -60,7 +60,7 @@ Obviously one or several key-value stores, NoSQL databases or SQL databases are 
 To reiterate, the questions posed for this challenge are:
 
 1. How would you store 1 million phone numbers?
-2. How can you check that your friend, Bob, has your phone number stored correctly while keeping your message safe from prying eyes?
+2. You need to check that your friend, Bob, has your correct phone number, but you cannot ask him directly. You must write the question on a card which and give it to Eve who will take the card to Bob and return the answer to you. What must you write on the card, besides the question, to ensure Bob can encode the message so that Eve cannot read your phone number?
 3. How would you organize your huge collection of shirts in your closet for easy retrieval?
 
 ### Binary search trees / B-trees
