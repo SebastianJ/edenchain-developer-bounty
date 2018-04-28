@@ -1,5 +1,6 @@
 # edenchain-developer-bounty
-EdenChain Developer Bounty Program Answers
+
+**EdenChain Developer Bounty Program Answers**
 
 ![EdenChain Logo](https://edenchain.io/img/logo01.png)
 
