@@ -79,7 +79,7 @@ If node A produces a new block the same time as node B produces a new block then
 
 For a solution to this problem, please see the section "Merkle Trees".
 
-**See bin/binary_tree for a demo of a simple BST implementation**
+**See [bin/binary_tree](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/bin/binary_tree) for a demo of a simple BST implementation**
 
 ### Hashing
 
@@ -119,9 +119,9 @@ The simple blockchain implementation features:
 * Binary Tree/BTree implementation for storing and rapidly accessing each block's data items.
 * A simple addressing system in the format of BLOCKHEIGHTxDATAHASH that can be used to easily retrieve a specific data item (i.e. a phone number, shirt etc.). This makes it easier to just select a desired block and lookup data in that block instead of iterating over all available blocks in order to find the desired data item.
 
-The main code base for this blockchain is stored in lib/edenchain/developer/bounty/blockchain/chain.rb and lib/edenchain/developer/bounty/blockchain/block.rb and is easily demoed by running bin/blockchain.
+The main code base for this blockchain is stored in [lib/edenchain/developer/bounty/blockchain/chain.rb](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/lib/edenchain/developer/bounty/blockchain/chain.rb) and [lib/edenchain/developer/bounty/blockchain/block.rb](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/lib/edenchain/developer/bounty/blockchain/block.rb) and is easily demoed by running [bin/blockchain](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/bin/blockchain).
 
-Just be aware that running bin/blockchain with the Proof of Work algorithm enabled will lead to slower execution compared to running without PoW enabled.
+Just be aware that running [bin/blockchain](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/bin/blockchain) with the Proof of Work algorithm enabled will lead to slower execution compared to running without PoW enabled.
 
 ![Bogdanoff hands out 140,000 EDN tokens to me (obviously)](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/files/bogdanoff-edn.jpg)
 
