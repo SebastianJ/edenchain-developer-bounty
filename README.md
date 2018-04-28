@@ -111,7 +111,7 @@ Combining all of the above leads us to...
 
 ### A super simple blockchain implementation
 
-![Quick rundown of the simple blockchain implementation](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/files/screencast.gif)
+[![Quick rundown of the simple blockchain implementation](https://github.com/SebastianJ/edenchain-developer-bounty/blob/master/files/screencast.gif)](https://youtu.be/X7i2UsGP3mo)
 
 In this repo there's a super simple blockchain implementation that combines the concepts of Binary Search Trees, Hashing and Merkle Trees to store 1,000,000 hashed phone numbers (well, it can be anything actually, but just to stick to the bounty questions) and easily retrieve them, while simultaneously mitigating Byzantine faults and creating a verifiable blockchain.
 
